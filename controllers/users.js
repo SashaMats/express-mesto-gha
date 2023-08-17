@@ -21,17 +21,17 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUsersById = (req, res) => {
-  if (req.params.userId.length === 24) {
+  if (req.params.id.length === 24) {
     const { id } = req.params;
     User.findById(id)
       .then((user) => {
         if (!user) {
-          res.status(404).send('Пользователь по указанному _id не найден');
+          res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
         }
         res.status(200).send(user);
       })
-      .catch((err) => {
-        res.status(500).send({ message: `${err} На сервере произошла ошика` });
+      .catch(() => {
+        res.status(500).send({ message: 'На сервере произошла ошика' });
       });
   } else {
     res.status(400).send({ message: 'Не верный формат id' });

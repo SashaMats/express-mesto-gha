@@ -8,8 +8,8 @@ module.exports.addCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send('Переданы некорректные данные при создании пользователя');
-      } res.status(500).send({ message: `${err} На сервере произошла ошика` });
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      } res.status(500).send({ message: 'На сервере произошла ошика' });
     });
 };
 
@@ -28,8 +28,8 @@ module.exports.deleteCard = (req, res) => {
     Card.findByIdAndRemove(req.params.cardId)
       .then((card) => {
         if (!card) {
-          res.status(400).send({ message: 'Карточка не найдена' });
-        } else res.send({ message: 'Карточка удалена' });
+          res.status(404).send({ message: 'Карточка не найдена' });
+        } else res.status(200).send({ message: 'Карточка удалена' });
       })
       .catch(() => {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
@@ -46,7 +46,7 @@ module.exports.addLike = (req, res) => {
     )
       .then((card) => {
         if (!card) {
-          res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+          res.status(404).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
         } else res.send(card);
       })
       .catch(() => {

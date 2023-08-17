@@ -22,4 +22,8 @@ app.use((req, res, next) => {
 app.use(cardRouter);
 app.use(userRouter);
 
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Такой страницы нет' });
+});
+
 app.listen(PORT);
