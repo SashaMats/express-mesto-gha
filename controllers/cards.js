@@ -64,7 +64,7 @@ module.exports.deleteLike = (req, res) => {
     )
       .then((card) => {
         if (!card) {
-          res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+          res.status(404).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
         } else res.send(card);
       })
       .catch(() => {
