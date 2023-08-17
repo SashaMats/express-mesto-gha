@@ -5,15 +5,15 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send('Переданы некорректные данные при создании пользователя');
-      } res.status(500).send({ message: `${err} На сервере произошла ошика` });
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      } else res.status(500).send({ message: 'На сервере произошла ошика' });
     });
 };
 
 module.exports.getUsers = (req, res) => {
   User.find()
     .then((user) => {
-      res.status(201).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       res.status(500).send({ message: `${err} На сервере произошла ошика` });
