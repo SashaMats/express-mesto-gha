@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
-const ERROR_BAD_REQUEST = 400;
+const ERROR_NOT_FOUND = 404;
 
 const { PORT = 3000 } = process.env;
 
@@ -25,7 +25,7 @@ app.use(cardRouter);
 app.use(userRouter);
 
 app.use('*', (req, res) => {
-  res.status(ERROR_BAD_REQUEST).send({ message: 'Такой страницы нет' });
+  res.status(ERROR_NOT_FOUND).send({ message: 'Такой страницы нет' });
 });
 
 app.listen(PORT);

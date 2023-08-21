@@ -5,10 +5,11 @@ const ERROR_BAD_REQUEST = 400;
 const ERROR_NOT_FOUND = 404;
 const ERROR_INTERNAL_SERVER_ERROR = 500;
 const RESPONCE_SUCCESSFUL = 200;
+const RESPONCE_CREATED = 201;
 
 module.exports.createUser = (req, res) => {
   User.create({ ...req.body })
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.status(RESPONCE_CREATED).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя' });

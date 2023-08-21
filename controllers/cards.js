@@ -5,12 +5,13 @@ const ERROR_BAD_REQUEST = 400;
 const ERROR_NOT_FOUND = 404;
 const ERROR_INTERNAL_SERVER_ERROR = 500;
 const RESPONCE_SUCCESSFUL = 200;
+const RESPONCE_CREATED = 201;
 
 module.exports.addCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.send(card);
+      res.status(RESPONCE_CREATED).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -52,7 +53,7 @@ module.exports.addLike = (req, res) => {
     .then((card) => {
       if (!card) {
         return res.status(ERROR_NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
-      } res.send(card);
+      } res.staus(RESPONCE_CREATED).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
