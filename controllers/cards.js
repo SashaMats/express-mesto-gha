@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const Card = require('../models/card');
 
 const ERROR_BAD_REQUEST = 400;
@@ -13,7 +14,7 @@ module.exports.addCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя' });
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя' });
       } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
@@ -23,8 +24,8 @@ module.exports.getCard = (req, res) => {
     .then((card) => {
       res.send(card);
     })
-    .catch((err) => {
-      res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: `${err} На сервере произошла ошика` });
+    .catch(() => {
+      res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
 
@@ -32,11 +33,13 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
-      } else res.status(RESPONCE_SUCCESSFUL).send({ message: 'Карточка удалена' });
+        return res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
+      } res.status(RESPONCE_SUCCESSFUL).send({ message: 'Карточка удалена' });
     })
-    .catch(() => {
-      res.status(ERROR_BAD_REQUEST).send({ message: 'Карточка с указанным _id не найдена' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Карточка с указанным _id не найдена' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
 
@@ -48,11 +51,13 @@ module.exports.addLike = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(ERROR_NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
-      } else res.send(card);
+        return res.status(ERROR_NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+      } res.send(card);
     })
-    .catch(() => {
-      res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
 
@@ -67,7 +72,9 @@ module.exports.deleteLike = (req, res) => {
         res.status(ERROR_NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else res.send(card);
     })
-    .catch(() => {
-      res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };

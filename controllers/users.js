@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const User = require('../models/user');
 
 const ERROR_BAD_REQUEST = 400;
@@ -10,8 +11,8 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя' });
-      } else res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
 
@@ -30,12 +31,14 @@ module.exports.getUsersById = (req, res) => {
   User.findById(id)
     .then((user) => {
       if (!user) {
-        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден' });
+        return res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден' });
       }
       res.status(RESPONCE_SUCCESSFUL).send(user);
     })
-    .catch(() => {
-      res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные _id' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные _id' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -46,13 +49,12 @@ module.exports.refreshUserAvatar = (req, res) => {
       .then((user) => res.send(user))
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-        } else {
-          res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
+          return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         }
+        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
       });
   } else {
-    res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -63,12 +65,11 @@ module.exports.refreshUser = (req, res) => {
       .then((user) => res.send(user))
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении профиля' });
-        } else {
-          res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
+          return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         }
+        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
       });
   } else {
-    res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
