@@ -53,7 +53,7 @@ module.exports.addLike = (req, res) => {
     .then((card) => {
       if (!card) {
         return res.status(ERROR_NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
-      } res.staus(RESPONCE_CREATED).send(card);
+      } res.status(RESPONCE_CREATED).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
