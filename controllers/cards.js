@@ -39,7 +39,7 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Карточка с указанным _id не найдена' });
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Карточка с указанным _id не найдена' });
       } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
@@ -57,7 +57,7 @@ module.exports.addLike = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
       } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };
@@ -75,7 +75,7 @@ module.exports.deleteLike = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Передан несуществующий _id карточки' });
       } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошика' });
     });
 };

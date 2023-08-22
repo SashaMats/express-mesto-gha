@@ -45,32 +45,26 @@ module.exports.getUsersById = (req, res) => {
 
 module.exports.refreshUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  if (req.user._id) {
-    User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-      .then((user) => res.send(user))
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-        }
-        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
-      });
-  } else {
-    return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-  }
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+      } if (err.name === 'CastError') {
+        return res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 module.exports.refreshUser = (req, res) => {
   const { name, about } = req.body;
-  if (req.user._id) {
-    User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-      .then((user) => res.send(user))
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении профиля' });
-        }
-        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
-      });
-  } else {
-    return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-  }
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      } if (err.name === 'CastError') {
+        return res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
+      } res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    });
 };
