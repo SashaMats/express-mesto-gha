@@ -36,9 +36,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
-    validate: {
-      validator: (pass) => validator.isStrongPassword(pass),
-    },
   },
 });
 
