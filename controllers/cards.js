@@ -6,6 +6,7 @@ const Card = require('../models/card');
 
 const BadRequestError = require('../errors/badRequestError');
 const NotFoundError = require('../errors/notFoundError');
+const ForbiddenError = require('../errors/forbiddenError');
 
 // const ERROR_BAD_REQUEST = 400;
 // const ERROR_NOT_FOUND = 404;
@@ -43,7 +44,7 @@ module.exports.deleteCard = (req, res, next) => {
         return Card.deleteOne(card)
           .then(() => res.status(RESPONCE_SUCCESSFUL).send({ message: 'Карта удалена' }))
           .catch(next);
-      } next(new BadRequestError('У вас нет прав для удаления этой карточки'));
+      } next(new ForbiddenError('У вас нет прав для удаления этой карточки'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
