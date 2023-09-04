@@ -40,11 +40,29 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         throw (new NotFoundError('Карточка не найдена'));
+      } if (req.user._id !== card.owner.toString()) {
+        throw (new ForbiddenError('У вас нет прав для совершения этого действия'));
+      } Card.deleteOne(card)
+        .then(() => res.status(RESPONCE_SUCCESSFUL).send({ message: 'Карта удалена' }))
+        .catch(next);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Карточка с указанным _id не найдена'));
+      } else { next(err); }
+    });
+};
+
+module.exports.deleteCard = (req, res, next) => {
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        throw (new NotFoundError('Карточка не найдена'));
       } if (req.user._id === card.owner.toString()) {
         return Card.deleteOne(card)
           .then(() => res.status(RESPONCE_SUCCESSFUL).send({ message: 'Карта удалена' }))
           .catch(next);
-      } next(new ForbiddenError('У вас нет прав для удаления этой карточки'));
+      } next(new ForbiddenError('У вас нет прав для совершения этого действия'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
