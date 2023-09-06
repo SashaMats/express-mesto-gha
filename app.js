@@ -11,7 +11,7 @@ const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const NotFoundError = require('./errors/notFoundError');
 
-const { PORT = 3000, DB_ADRESS = 'mongodb://localhost:27017/mestodb' } = process.env;
+const { PORT = 3000, DB_ADRESS = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 mongoose.connect(DB_ADRESS, {
   useNewUrlParser: true,
